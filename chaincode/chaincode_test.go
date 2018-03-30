@@ -7,12 +7,10 @@ import (
 )
 
 const (
-	uuid = "chaincode-1"
+	Uuid = "chaincode-1"
 )
 
 func TestCreateOrder(t *testing.T) {
-	fmt.Println("Entering TestCreateLoanApplication")
-
 	stub := shim.NewMockStub("mockStub", new(ChaincodeTest))
 	if stub == nil {
 		t.Fatalf("MockStub creation failed")
@@ -21,33 +19,29 @@ func TestCreateOrder(t *testing.T) {
 	fmt.Printf("%#v\n", stub)
 
 	//simolation chaincodeinterface Init
-	Args := [][]byte{
-		{'p', 'a', 'n'},
-		{'l', 'i', 'n'}}
-
-	respone := stub.MockInit(uuid, Args)
+	respone := stub.MockInit(Uuid, nil)
 	fmt.Printf("init resp: %#v\n", respone.String())
 
 	//invoke
-	respone = stub.MockInvoke(uuid, Args)
+	Args := make([][]byte, 3)
+	Args[0] = []byte("create")
+	Args[1] = []byte("234")
+	Args[2] = []byte("10")
+
+	respone = stub.MockInvoke(Uuid, Args)
 	fmt.Printf("invoke resp: %#v\n", respone.String())
+
+	//
+	data, err := stub.GetState(string(respone.GetPayload()))
+	if err != nil {
+	}
+
+	fmt.Printf("%#v\n", string(data))
 
 	//get args
 	args := stub.GetArgs()
 	for i := 0; i < len(args); i++ {
 		fmt.Printf("args %d : %s\n", i, string(args[i]))
 	}
-
-	//composite key = str1+str2
-	attr := make([]string, 10)
-
-	attr[0] = "panlin"
-	attr[1] = "lijie"
-
-	str, err := stub.CreateCompositeKey("xxx", attr)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-	}
-	fmt.Printf("string: %s\n", str)
 
 }
