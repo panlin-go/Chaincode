@@ -10,6 +10,11 @@ const (
 	Uuid = "chaincode-1"
 )
 
+func Show(stub *shim.MockStub) {
+	//	fmt.Printf("channelId: %s\n", stub.GetChannelID())
+	fmt.Printf("TxId: %s\n", stub.GetTxID())
+}
+
 func TestCreateOrder(t *testing.T) {
 	stub := shim.NewMockStub("mockStub", new(ChaincodeTest))
 	if stub == nil {
@@ -44,4 +49,6 @@ func TestCreateOrder(t *testing.T) {
 		fmt.Printf("args %d : %s\n", i, string(args[i]))
 	}
 
+	//show
+	Show(stub)
 }
